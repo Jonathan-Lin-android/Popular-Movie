@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Popular-Movie</string>
+<!--    NetworkUtil.java    -->
+    <string name="scheme">https</string>;
+    <string name="base_url">api.themoviedb.org/3</string>;
+    <string name="type">movie</string>
+    <string name="query_api_key">api_key</string>
+    <string name="query_api_value">PUT_API_KEY_IN_STRINGS.XML</string>
+
+</resources>
