@@ -1,19 +1,21 @@
 package com.example.popular_movie.network;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
-import android.net.Network;
 import android.net.Uri;
 import com.example.popular_movie.R;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class NetworkUtil {
 
-/*
-connecting the web. (opening a sesesion with API and get response) returns a String
- */
+    /*
+    connecting the web. (opening a session with API and get response) returns a String
+     */
 
     /*
         @param String - valid paths: top_rated or popular
@@ -40,8 +42,27 @@ connecting the web. (opening a sesesion with API and get response) returns a Str
         }
     }
 
-    private static String getAPIValue(Resources res)
+    // read api key from a raw file.
+    public static String getAPIValue(Resources res)
     {
-        return res.getString(R.string.query_api_value);
+        InputStream in = res.openRawResource(R.raw.api_key);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+        String result = null;
+        try {
+            result = reader.readLine();
+            in.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
+
+    /*
+    retro fit connect and return a json string
+    make a json parser.
+     */
+
+
 }
