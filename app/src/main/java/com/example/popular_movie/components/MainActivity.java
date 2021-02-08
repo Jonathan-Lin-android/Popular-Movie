@@ -1,84 +1,67 @@
 package com.example.popular_movie.components;
 
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.popular_movie.R;
-import com.example.popular_movie.network.ApiMovieResponseModel.MovieModel;
-import com.example.popular_movie.network.ApiMovieService;
-import com.example.popular_movie.network.ApiMovieResponseModel;
-import com.example.popular_movie.network.NetworkUtil;
-import com.example.popular_movie.network.RetrofitClient;
+
+import com.example.popular_movie.database.PopularMovieModel;
+import com.example.popular_movie.network.MovieDatabase;
 import java.util.List;
-import retrofit2.Response;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 public class MainActivity extends AppCompatActivity {
+
+    // TODO: OVERRIDE FACTORY VIEWMODEL.FACTORY CREATE.
+    private MoviesViewModel viewModel;
+
+    private void initAndroidViewModel() {
+        ViewModelFactory viewModelFactory = new ViewModelFactory(getApplicationContext());
+        this.viewModel = new ViewModelProvider((ViewModelStoreOwner) getApplication(), viewModelFactory)
+                .get(MoviesViewModel.class);
+
+        //  TODO: make top rated movie DAO. SET IT UP IN VIEWMODEL WHEN I WAKE UP.
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MovieDatabase.syncPopularMovies(getApplicationContext());
+        initAndroidViewModel();
 
         setContentView(R.layout.activity_main);
 
-        ApiMovieService service = RetrofitClient.getMovieAPIInstance(getApplicationContext()).create(ApiMovieService.class);
+        // set up recycler view layout manager
+        RecyclerView moviePosterRecylerView = (RecyclerView) findViewById(R.id.rv_movie_poster);
 
-        //gets api key from raw file
-        Call<ApiMovieResponseModel> call = service.getPopularMovies(NetworkUtil.getAPIValue(getResources()));
+        //popular movie list load as default.
+        final MovieAdapter mAdapter = new MovieAdapter(this.viewModel.getPopularMoviesList());
+        moviePosterRecylerView.setAdapter(mAdapter);
 
-        // implement and define the call back in a different class.
-        call.enqueue(new Callback<ApiMovieResponseModel>() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        moviePosterRecylerView.setLayoutManager(layoutManager);
 
-            /*
-            create Callback class
-            this method only insert into database
-            in Activity onCreate()
-            {
-            setup ViewModel with database.loadAll() even if database is empty. because of live data it will update as we insert into database.
-            }
-             */
-            /*
-            TODO: sleep the thread for 5 seconds, navigate to new activity, see if viewmodel of MainActivity is still updated.
-            TODO: if activity is destroyed does it still try to update the main activity view model.
-            insert movie models into database.
-            setup android view model.
-            view model.movieList = DAO.loadAllMovies();
-             */
+        /*
+         * Use this setting to improve performance if you know that changes in content do not
+         * change the child layout size in the RecyclerView
+         */
+        moviePosterRecylerView.setHasFixedSize(true);
+
+
+        /*
+        This observer acts as a response to a database sync from the network.
+         */
+        this.viewModel.getPopularMoviesList().observe(MainActivity.this, new Observer<List<PopularMovieModel>>() {
             @Override
-            public void onResponse(final Call<ApiMovieResponseModel> call, final Response<ApiMovieResponseModel> response) {
-                Log.d("testt","success: " + 	String.valueOf(response.isSuccessful()));
-                Log.d("testt","code: " + response.code());
-
-                Log.d("testt","status message: " + response.message());
-                Log.d("testt", "Response errorBody" + response.raw().request().url());
-
-                if(!response.isSuccessful())
-                    return;
-
-                assert response.body() != null;
-
-                ApiMovieResponseModel apiModel = response.body();
-                List<MovieModel> movieList = apiModel.getResult();
-
-                if(movieList == null) {
-                    Log.d("testt", "result is null");
-                 //   throw new RuntimeException("movieList is null");
-                }
-
-                for(MovieModel m : movieList) {
-
-                            ((TextView) findViewById(R.id.tv_test)).append(m.getOriginalTitle() +"\n");
-                        }
-                        ((TextView) findViewById(R.id.tv_test)).append(movieList.toString() +"\n");
-
-
-            }
-            @Override
-            public void onFailure(final Call<ApiMovieResponseModel> call, final Throwable t) {
-                Toast.makeText(MainActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+            public void onChanged(final List<PopularMovieModel> popularMovieModels) {
+                mAdapter.notifyDataSetChanged();
             }
         });
 
