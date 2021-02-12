@@ -5,18 +5,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.popular_movie.database.AppDatabase;
 import com.example.popular_movie.database.PopularMovieDao;
-import com.example.popular_movie.database.PopularMovieModel;
+import com.example.popular_movie.database.MovieModel;
 import java.util.List;
 
 public class MoviesViewModel extends ViewModel {
 
-    private final LiveData<List<PopularMovieModel>> popularMoviesList;
+    private final LiveData<List<MovieModel>> popularMoviesList;
 
-    private LiveData<List<PopularMovieModel>> topRatedMoviesList;
-
-    public LiveData<List<PopularMovieModel>> getTopRatedMoviesList() {
-        return topRatedMoviesList;
-    }
+    private LiveData<List<MovieModel>> topRatedMoviesList;
 
     /*
         setting up list using LiveData Database auto update
@@ -28,9 +24,10 @@ public class MoviesViewModel extends ViewModel {
 
     }
 
-    public LiveData<List<PopularMovieModel>> getPopularMoviesList() {
+    public LiveData<List<MovieModel>> getTopRatedMoviesList() {
+        return topRatedMoviesList;
+    }
+    public LiveData<List<MovieModel>> getPopularMoviesList() {
         return popularMoviesList;
     }
-
-
 }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import com.example.popular_movie.database.AppDatabase;
 import com.example.popular_movie.database.PopularMovieDao;
-import com.example.popular_movie.database.PopularMovieModel;
+import com.example.popular_movie.database.MovieModel;
 import com.example.popular_movie.threads.AppExecutors;
 import java.io.IOException;
 import java.util.List;
@@ -47,7 +47,14 @@ public class MovieDatabase {
                                 //request is successful
                                 ApiMovieResponseModel apiModel = response.body();
 
-                                List<PopularMovieModel> movieList = apiModel.getResult();
+                                List<MovieModel> movieList = apiModel.getResult();
+                                //check if it loads correctly
+                                for(MovieModel m : movieList)
+                                {
+                                    Log.d("testt", "movie: " + m.getOriginalTitle());
+                                    Log.d("testt", "movie: " + m.toString());
+
+                                }
 
                                 //Database operations
                                 AppDatabase db = AppDatabase.getInstance(null);
@@ -56,7 +63,7 @@ public class MovieDatabase {
 
                                     // resync database
                                     dao.deleteAll();
-                                    PopularMovieModel[] arr = new PopularMovieModel[movieList.size()];
+                                    MovieModel[] arr = new MovieModel[movieList.size()];
                                     dao.insertAll(movieList.toArray(arr));
                                 }
                             }

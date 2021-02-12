@@ -10,19 +10,22 @@ import java.util.List;
 @Dao
 public interface PopularMovieDao {
 
-    @Query("SELECT * FROM popular_movies")
-    LiveData<List<PopularMovieModel>> getAll();
+    @Query("SELECT * FROM movies")
+    LiveData<List<MovieModel>> getAll();
+
+    @Query("SELECT * FROM movies WHERE id = :movieId")
+    LiveData<MovieModel> getMovie(int movieId);
 
     @Insert
-    void insertAll(PopularMovieModel ... movieModels);
+    void insertAll(MovieModel... movieModels);
 
     @Insert
-    void insertAll(List<PopularMovieModel> movieModels);
+    void insertAll(List<MovieModel> movieModels);
 
-    @Query("SELECT * FROM popular_movies WHERE id IN (:movieIds)")
-    LiveData<List<PopularMovieModel>> loadAllByIds(int[] movieIds);
+    @Query("SELECT * FROM movies WHERE id IN (:movieIds)")
+    LiveData<List<MovieModel>> loadAllByIds(int[] movieIds);
 
-    @Query("DELETE FROM popular_movies")
+    @Query("DELETE FROM movies")
     void deleteAll();
 
 /*
@@ -32,5 +35,5 @@ public interface PopularMovieDao {
 */
 
     @Delete
-    void delete(PopularMovieModel movieModel);
+    void delete(MovieModel movieModel);
 }

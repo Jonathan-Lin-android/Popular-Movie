@@ -4,9 +4,11 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import com.example.popular_movie.R;
 
-@Database(entities = {PopularMovieModel.class}, version = 3)
+@Database(entities = {MovieModel.class}, version = 6, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance = null;

@@ -1,12 +1,32 @@
 <resources>
     <string name="app_name">Popular-Movie</string>
-<!--    NetworkUtil.java    -->
+
+    <!--    NetworkUtil.java    -->
     <string name="scheme">https</string>;
     <string name="base_url">https://api.themoviedb.org/3/</string>;
     <string name="type">movie</string>
     <string name="query_api_key">api_key</string>
     <string name="query_api_value">PUT_API_KEY_IN_STRINGS.XML</string>
 
+    <string name="image_path">https://image.tmdb.org/t/p/w500/</string>
+    <string name="example_backdrop">/fQq1FWp1rC89xDrRMuyFJdFUdMd.jpg</string>
+    <string name = "example_poster">/fYtHxTxlhzD4QWfEbrC1rypysSD.jpg</string>
     <!--    Database names -->
     <string name="database_name">MovieDatabase</string>
+
+    <!--    temp layout -->
+    <string name="desc">testtttttttttttttttttttttttttttttttttttttttttttttteeeeetesttttttttttttttttttttttttttttttttttttttttttttttteeeeetesttttttttttttttttttttttttttttttttttttttttttttttteeeeetesttttttttttttttttttttttttttttttttttttttttttttttteeeee</string>
+
+
+    <!-- Content descriptions-->
+    <string name="sandwich_picture_content_description">Sandwich picture</string>
+
+    <string name="detail_also_known_as_label">Also known as:</string>
+
+    <string name="detail_place_of_origin_label">Place of origin:</string>
+
+    <string name="detail_description_label">Description:</string>
+
+    <string name="detail_ingredients_label">Ingredients:</string>
+
 </resources>
