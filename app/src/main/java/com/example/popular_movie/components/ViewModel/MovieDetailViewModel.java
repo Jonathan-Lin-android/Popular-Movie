@@ -1,4 +1,4 @@
-package com.example.popular_movie.components;
+package com.example.popular_movie.components.ViewModel;
 
 import android.content.Context;
 import androidx.lifecycle.LiveData;
@@ -27,7 +27,7 @@ model.setTopRated = true;
 */
 public class MovieDetailViewModel extends ViewModel {
 
-    private final LiveData<MovieModel> movieModel;
+    public final LiveData<MovieModel> movieModel;
     MovieDetailViewModel(Context context, int dbId)
     {
         movieModel = AppDatabase.getInstance(context.getApplicationContext()).getPopularMovieDao().getMovie(dbId);

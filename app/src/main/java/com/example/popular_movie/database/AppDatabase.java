@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import com.example.popular_movie.R;
 
-@Database(entities = {MovieModel.class}, version = 6, exportSchema = false)
+@Database(entities = {MovieModel.class}, version = 7, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 

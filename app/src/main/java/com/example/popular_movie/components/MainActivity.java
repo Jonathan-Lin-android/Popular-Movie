@@ -1,88 +1,71 @@
 package com.example.popular_movie.components;
 
-import android.content.Intent;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import androidx.lifecycle.Observer;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 import com.example.popular_movie.R;
-import com.example.popular_movie.components.MovieAdapter.ListItemClickListener;
-import com.example.popular_movie.database.MovieModel;
+import com.example.popular_movie.components.Fragment.FragmentService;
+import com.example.popular_movie.components.Fragment.MovieDetailFragment;
+import com.example.popular_movie.components.ViewModel.MoviesViewModel;
+import com.example.popular_movie.components.ViewModel.MoviesViewModelFactory;
+import com.example.popular_movie.config.TabConfig;
 import com.example.popular_movie.network.MovieDatabase;
-import java.util.List;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.Tab;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy;
 
-public class    MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentService.FragmentTransaction{
 
-    private MoviesViewModel viewModel;
+    private MoviesViewModel mViewModel;
     public final static String S_MOVIE_DATABASE_ID_KEY = "1";
 
-    private void initAndroidViewModel() {
-        MoviesViewModelFactory moviesViewModelFactory = new MoviesViewModelFactory(getApplicationContext());
-        this.viewModel = new ViewModelProvider((ViewModelStoreOwner) getApplication(), moviesViewModelFactory)
-                .get(MoviesViewModel.class);
-        //  TODO: make top rated movie DAO. SET IT UP IN VIEWMODEL WHEN I WAKE UP.
-    }
-    /*
-textview ellpises
-     tvDesc.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-         @Override
-         public void onGlobalLayout() {
-             tvDesc.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-             int noOfLinesVisible = tvDesc.getHeight() / tvDesc.getLineHeight();
-
-             tvDesc.setText(getString(R.string.desc));
-
-             tvDesc.setMaxLines(noOfLinesVisible);
-             tvDesc.setEllipsize(TextUtils.TruncateAt.END);
-
-         }
-     });
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         MovieDatabase.syncPopularMovies(getApplicationContext());
-        initAndroidViewModel();
+        this.mViewModel = initAndroidViewModel();
 
         setContentView(R.layout.activity_main);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        ViewPager2 viewPager2 = findViewById(R.id.pager);
 
-        // set up recycler view layout manager
-        RecyclerView moviePosterRecylerView = (RecyclerView) findViewById(R.id.rv_movie_poster);
+        TabConfig<Fragment> tabConfig = new TabConfig<Fragment>();
 
-        MovieAdapter.ListItemClickListener listItemClickListener = new ListItemClickListener() {
-            @Override
-            public void onItemClick(final int dbId) {
-                Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
-                intent.putExtra(MainActivity.S_MOVIE_DATABASE_ID_KEY, dbId);
-                startActivity(intent);
-            }
-        };
-
-        //popular movie list load as default.
-        final MovieAdapter mAdapter = new MovieAdapter(this.viewModel.getPopularMoviesList(), listItemClickListener);
-        moviePosterRecylerView.setAdapter(mAdapter);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        moviePosterRecylerView.setLayoutManager(layoutManager);
-
-        moviePosterRecylerView.setHasFixedSize(true);
-
-        /*
-        This observer acts as a response to a database sync from the network.
-         */
-        this.viewModel.getPopularMoviesList().observe(MainActivity.this, new Observer<List<MovieModel>>() {
-            @Override
-            public void onChanged(final List<MovieModel> movieModels) {
-                mAdapter.notifyDataSetChanged();
-            }
-        });
+        viewPager2.setAdapter(new FragmentAdapter(getSupportFragmentManager(), this.getLifecycle(), tabConfig.getFragmentClassArray()));
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager2,
+                new TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull final Tab tab, final int position) {
+                        tab.setText(tabConfig.getTabLabelArray()[position]);
+                    }
+                });
+        tabLayoutMediator.attach();
 
     }
 
+    private MoviesViewModel initAndroidViewModel() {
+        MoviesViewModelFactory moviesViewModelFactory = new MoviesViewModelFactory(getApplicationContext());
+        return new ViewModelProvider((ViewModelStoreOwner) getApplication(), moviesViewModelFactory)
+                .get(MoviesViewModel.class);
+        //  TODO: make top rated movie DAO. SET IT UP IN VIEWMODEL WHEN I WAKE UP.
+    }
+
+    @Override
+    public void replace(final FragmentManager fm, final int containerId, final Fragment fragment, final String string) {
+        FragmentTransaction transaction = fm.beginTransaction();
+
+        //removes all attached fragments in the container.
+        transaction.replace(containerId, fragment);
+        //transaction.add(R.id.popular_movies_fragment_container, fragment, null);
+        transaction.addToBackStack(null);
+    }
 }

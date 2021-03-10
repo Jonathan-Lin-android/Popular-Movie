@@ -8,8 +8,8 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface PopularMovieDao {
-
+public interface PopularMovieDao extends MovieDao {
+    @Override
     @Query("SELECT * FROM movies")
     LiveData<List<MovieModel>> getAll();
 
@@ -22,7 +22,7 @@ public interface PopularMovieDao {
     @Insert
     void insertAll(List<MovieModel> movieModels);
 
-    @Query("SELECT * FROM movies WHERE id IN (:movieIds)")
+    @Query("SELECT * FROM movies WHERE movieId IN (:movieIds)")
     LiveData<List<MovieModel>> loadAllByIds(int[] movieIds);
 
     @Query("DELETE FROM movies")

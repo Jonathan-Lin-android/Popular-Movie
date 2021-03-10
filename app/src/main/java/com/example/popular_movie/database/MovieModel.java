@@ -1,5 +1,6 @@
 package com.example.popular_movie.database;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -11,10 +12,11 @@ import com.google.gson.annotations.SerializedName;
 public class MovieModel {
 
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     @Expose(serialize = false, deserialize = false)
     private int dbId;
 
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "movieId")
     @SerializedName("id")
     private int movieId;
 
@@ -65,7 +67,7 @@ public class MovieModel {
     {
         this.movieId = movieId;
         this.originalTitle = originalTitle;
-        this.originalLanguage = originalLanguage;
+        this.originalLanguage = originalLanguage.toUpperCase();
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
         this.overview = overview;
@@ -83,7 +85,7 @@ public class MovieModel {
         this.dbId = dbId;
         this.movieId = movieId;
         this.originalTitle = originalTitle;
-        this.originalLanguage = originalLanguage;
+        this.originalLanguage = originalLanguage.toUpperCase();
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
         this.overview = overview;
@@ -99,7 +101,7 @@ public class MovieModel {
     }
 
     public void setOriginalLanguage(final String originalLanguage) {
-        this.originalLanguage = originalLanguage;
+        this.originalLanguage = originalLanguage.toUpperCase();
     }
 
     public int getMovieId() {
@@ -188,5 +190,18 @@ public class MovieModel {
 
     public void setFavorite(final boolean favorite) {
         this.favorite = favorite;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        String str = "Movie Model: \n";
+        str += "\t original name = " + this.originalTitle + "\n";
+        str += "\t poster path = " + this.posterPath + "\n";
+        str += "\t backdrop path = " + this.backdropPath + "\n";
+        str += "\t popular query = " + this.popularQuery + "\n";
+        str += "\t top rated query = " + this.topRatedQuery + "\n";
+        str += "\t favorite: " + this.favorite + "\n";
+        return str;
     }
 }

@@ -8,7 +8,7 @@
     <string name="query_api_key">api_key</string>
     <string name="query_api_value">PUT_API_KEY_IN_STRINGS.XML</string>
 
-    <string name="image_path">https://image.tmdb.org/t/p/w500/</string>
+    <string name="image_path">https://image.tmdb.org/t/p/w500</string>
     <string name="example_backdrop">/fQq1FWp1rC89xDrRMuyFJdFUdMd.jpg</string>
     <string name = "example_poster">/fYtHxTxlhzD4QWfEbrC1rypysSD.jpg</string>
     <!--    Database names -->

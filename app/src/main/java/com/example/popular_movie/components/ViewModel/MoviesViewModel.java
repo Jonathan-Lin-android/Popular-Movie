@@ -1,4 +1,4 @@
-package com.example.popular_movie.components;
+package com.example.popular_movie.components.ViewModel;
 
 import android.content.Context;
 import androidx.lifecycle.LiveData;
@@ -8,6 +8,7 @@ import com.example.popular_movie.database.PopularMovieDao;
 import com.example.popular_movie.database.MovieModel;
 import java.util.List;
 
+//TODO: create filter function for movies to filter by favorite, top movies, and popular. Transformations? or Stream?
 public class MoviesViewModel extends ViewModel {
 
     private final LiveData<List<MovieModel>> popularMoviesList;

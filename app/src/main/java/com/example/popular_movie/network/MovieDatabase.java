@@ -53,7 +53,7 @@ public class MovieDatabase {
                                 {
                                     Log.d("testt", "movie: " + m.getOriginalTitle());
                                     Log.d("testt", "movie: " + m.toString());
-
+                                    m.setPopularQuery(true);
                                 }
 
                                 //Database operations
